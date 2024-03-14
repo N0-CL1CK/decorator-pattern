@@ -1,5 +1,5 @@
 import { Aplicacao } from "./aplicacao";
-import { Decorador, DecoradorNotificacaoFacebook, DecoradorNotificacaoSMS, DecoradorNotificacaoSlack, NotificacaoBase } from "./notificacao";
+import { Decorador, DecoradorNotificacaoFacebook, DecoradorNotificacaoSMS, DecoradorNotificacaoSlack, Notificacao } from "./notificacao";
 
 const NOTIFICACOES = {
 	facebook: true,
@@ -10,27 +10,25 @@ const NOTIFICACOES = {
 async function main() {
 
 	const aplicacao = new Aplicacao();
-	const notificacaoBase = new Decorador(
-		new NotificacaoBase()
+	const notificacao = new Decorador(
+		new Notificacao("Aviso", `Sua conta foi acessada em ${new Date().toLocaleString('pt-br').replace(",", " às")}`)
 	);
 
-	notificacaoBase.setMensagem(`Sua conta foi acessada em ${new Date().toLocaleString('pt-br')}`);
-
 	if (NOTIFICACOES.facebook) {
-		const success = await aplicacao.configurarNovaNotificacao(
-			new DecoradorNotificacaoFacebook(notificacaoBase)
+		await aplicacao.configurarNovaNotificacao(
+			new DecoradorNotificacaoFacebook(notificacao)
 		)
 	}
 
 	if (NOTIFICACOES.slack) {
 		await aplicacao.configurarNovaNotificacao(
-			new DecoradorNotificacaoSlack(notificacaoBase)
+			new DecoradorNotificacaoSlack(notificacao)
 		)
 	}
 
 	if (NOTIFICACOES.sms) {
 		await aplicacao.configurarNovaNotificacao(
-			new DecoradorNotificacaoSMS(notificacaoBase)
+			new DecoradorNotificacaoSMS(notificacao)
 		)
 	}
 

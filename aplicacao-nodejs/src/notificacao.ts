@@ -1,51 +1,78 @@
-interface INotificacaoBase {
+interface InterfaceNotificacao {
+	// Métodos
+	setTipo(tipo: string): void;
+	setMensagem(mensagem: string): void;
+	getTipo(): string;
 	getMensagem(): string;
-	enviarNotificacao(): void;
 }
 
-export class NotificacaoBase implements INotificacaoBase {
-	private mensagem: string;
-	
-	constructor() {}
+export class Notificacao implements InterfaceNotificacao {
+	tipo: string;
+	mensagem: string;
+
+	constructor(tipo: string, mensagem: string) {
+		this.tipo = tipo;
+		this.mensagem = mensagem;
+	}
+
+	setTipo(tipo: string): void {
+		this.tipo = tipo;
+	}
 
 	setMensagem(mensagem: string): void {
 		this.mensagem = mensagem;
 	}
 
+	getTipo(): string {
+		return this.tipo;
+	}
+
 	getMensagem(): string {
 		return this.mensagem;
 	}
-
-	enviarNotificacao(): void {}
 }
 
-export class Decorador extends NotificacaoBase {
-	public _componente: NotificacaoBase;
+export class Decorador implements InterfaceNotificacao {
+	mensagem: string;
+	tipo: string;
+	
+	protected _wrappe: Notificacao;
 
-	constructor(notificacao: NotificacaoBase) {
-		super();
-		this._componente = notificacao;
+	constructor(notificacao: Notificacao) {
+		this._wrappe = notificacao;
 	}
 
-	enviarNotificacao(): void {
-		this._componente.enviarNotificacao();
+	setTipo(tipo: string): void {
+		this._wrappe.setTipo(tipo)
+	}
+
+	setMensagem(mensagem: string): void {
+		this._wrappe.setMensagem(mensagem)
+	}
+
+	getTipo(): string {
+		return this._wrappe.getTipo()
+	}
+
+	getMensagem(): string {
+		return this._wrappe.getMensagem()
 	}
 }
 
 export class DecoradorNotificacaoFacebook extends Decorador {
 	enviarNotificacao(): void {
-		console.log(`[+] Enviado notificação via Facebook: ${this._componente.getMensagem()}`);
+		console.log(`[+] Enviado notificação via Facebook: [${this.getTipo()}] ${this.getMensagem()}`);
 	}
 }
 
 export class DecoradorNotificacaoSlack extends Decorador {
 	enviarNotificacao(): void {
-		console.log(`[+] Enviado notificação via Slack: ${this._componente.getMensagem()}`);
+		console.log(`[+] Enviado notificação via Slack: [${this.getTipo()}] ${this.getMensagem()}`);
 	}
 }
 
 export class DecoradorNotificacaoSMS extends Decorador {
 	enviarNotificacao(): void {
-		console.log(`[+] Enviado notificação via SMS: ${this._componente.getMensagem()}`);
+		console.log(`[+] Enviado notificação via SMS: [${this.getTipo()}] ${this.getMensagem()}`);
 	}
 }

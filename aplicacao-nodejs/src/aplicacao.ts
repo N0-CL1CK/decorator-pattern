@@ -1,13 +1,13 @@
-import { NotificacaoBase } from "./notificacao";
+import { Notificacao } from "./notificacao";
 
 export class Aplicacao {
-	private pilhaNotificacoes: NotificacaoBase[] = [];
+	private pilhaNotificacoes = [];
 
-	getNotificacoes(): NotificacaoBase[] {
+	getNotificacoes() {
 		return this.pilhaNotificacoes;
 	}
 
-	async configurarNovaNotificacao(notificacao: NotificacaoBase): Promise<boolean> {
+	async configurarNovaNotificacao(notificacao: Notificacao): Promise<boolean> {
 		try {
 			this.pilhaNotificacoes.push(notificacao);
 
